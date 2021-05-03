@@ -22,6 +22,17 @@ model.add(Activation('sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['binary_accuracy'])
 
 
+# keras.layers.Dense() 파라미터
+# - input_dim : 만들 모델의 입력 값의 개수(x값 하나 입력)
+# - units : 만들 모델의 출력 값의 개수(y값 하나 출력)
+# - activation : linear 로 설정해 선형성을 유지시킴.('sigmoid'도 가능)
+
+# keras.Model.compile() 파라미터
+# - loss : 최적화 과정에서 최소화될 손실함수를 설정하는 것으로, MSE(평균제곱오차)와 binary_crossentropy가 자주 사용.
+# - optimizer : 훈련 과정을 설정하는 것으로, Adam, SGD 등이 있음.
+# - metrics : 훈련을 모니터링하기 위해 사용. 
+#             metrics = ['binary_accuracy']는 출력이 0.5 이상일 경우 출력을 1로 판단하고, 이하일 경우 0으로 판단
+
 
 # 모델 학습
 # 300번 반복학습을 통해 최적의 w와 b 찾기
