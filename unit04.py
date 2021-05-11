@@ -865,3 +865,139 @@ early_stopping_callback = EarlyStopping(monitor = 'val_loss', patience = 100)
 model.fit(X, Y, validation_split = 0.2, epochs = 2000, batch_size = 500, callbacks = early_stopping_callback)
 
 print('\n Accuracy : %.4f' %(model.evaluate(X, Y)[1]))
+
+####################
+# 라이브러리 불러오기
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.callbacks import ModelCheckpoint, EarlyStopping
+
+import pandas as pd
+import numpy as np
+import os
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+# 시드값 초기화
+seed = 3
+np.random.seed(seed)
+tf.random.set_seed(seed)
+
+# 자료 불러오기
+df_pre = pd.read_csv('/Users/heechankang/projects/pythonworkspace/git_study/machine_deep_learning/data/wine.csv', header = None)
+df = df_pre.sample(frac = 1)
+
+dataset = df.values
+
+X = dataset[:, :12]
+Y = dataset[:,  12]
+
+
+# 모델 구성
+model = Sequential()
+model.add(Dense(30, input_dim = 12, activation = 'relu'))
+model.add(Dense(12, activation = 'relu'))
+model.add(Dense(8, activation = 'relu'))
+model.add(Dense(1, activation = 'sigmoid'))
+
+model.compile(loss = 'binary_crossentropy',
+              optimizer = 'adam',
+              metrics = 'accuracy')
+
+# 저장 폴더 만들기
+MODEL_DIR = './model/'
+if not os.path.exists(MODEL_DIR):
+    os.mkdir(MODEL_DIR)
+
+# 파일 이름 지정
+modelpath = './model/{epoch:02d} - {val_loss:.4f}.hdf5'
+
+# 모델 업데이트 저장
+checkpointer = ModelCheckpoint(filepath=modelpath, moniter = 'val_loss', verbose = 1, save_best_only = True)
+
+# 학습 자동 중단 설정
+early_stopping_callback = EarlyStopping(monitor = 'val_loss', patience = 100)
+
+model.fit(X, Y, validation_split = 0.2, epochs = 2000, batch_size = 500, verbose = 0, callbacks = [early_stopping_callback, checkpointer])
+
+
+##########################
+from keras.models import Sequential
+from keras.layers import Dense
+from sklearn.model_selection import train_test_split
+
+import pandas as pd
+
+
+df = pd.read_csv('./data/housing.csv', delim_whitespace = True, header = None)
+
+print(df.info())
+df.head()
+
+dataset = df.values
+
+X = dataset[:,:13]
+Y = dataset[:, 13]
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size = 0.3, random_state=40)
+
+# 선형회귀 데이터는 참과 거짓 구분할 필요가 없음.
+# 출력층에 활성화 함수를 지정할 필요도 없음. 
+model = Sequential()
+model.add(Dense(30, input_dim = 13, activation = 'relu'))
+model.add(Dense(6, activation = 'relu'))
+model.add(Dense(1))
+
+model.compile(loss = 'mean_squared_error',
+              optimizer = 'adam',
+              )
+
+model.fit(X_train, Y_train, epochs = 200, batch_size = 10)
+
+# 모델의 학습정도를 확인하기 위해 예측값과 실제값 비교 실시
+Y_prediction = model.predict(X_test).flatten()
+for i in range(10):
+    label = Y_test[i]
+    prediction = Y_prediction[i]
+    print('실제 가격: {:.3f}, 예상가격: {:.3f}'.format(label, prediction)) 
+
+######################
+# 진짜
+from keras.models import Sequential
+from keras.layers import Dense
+from sklearn.model_selection import train_test_split
+
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+
+# seed 생성
+seed = 0
+np.random.seed(seed)
+tf.random.set_seed(3)
+
+df = pd.read_csv('./data/housing.csv', delim_whitespace = True, header = None)
+
+dataset = df.values
+X = dataset[:, :13]
+Y = dataset[:, 13]
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.3, random_state = seed)
+
+model = Sequential()
+model.add(Dense(30, input_dim = 13, activation = 'relu'))
+model.add(Dense(6, activation = 'sigmoid'))
+model.add(Dense(1))
+
+model.compile(loss = 'mean_squared_error',
+              optimizer = 'adam')
+
+model.fit(X_train, Y_train, epochs = 200, batch_size = 10)
+
+# 예측값 비교
+Y_prediction = model.predict(X_test).flatten()
+for i in range(10):
+    label = Y_test[i]
+    prediction = Y_prediction[i]
+    print('실제가격: {:.3f}, 예상가격: {:.3f}'.format(label, prediction))
+    
