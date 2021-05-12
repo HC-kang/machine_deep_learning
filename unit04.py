@@ -1001,3 +1001,4 @@ for i in range(10):
     prediction = Y_prediction[i]
     print('실제가격: {:.3f}, 예상가격: {:.3f}'.format(label, prediction))
     
+#######################
