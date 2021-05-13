@@ -276,3 +276,5 @@ model.add(Dense(1, activation = 'sigmoid'))
 model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = 'accuracy')
 model.fit(padded_x, classes, epochs = 20)
 print('\n Accuracy : %.4f'%(model.evaluate(padded_x, classes)[1]))
+
+pow(5, 2)
